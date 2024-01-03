@@ -31,33 +31,25 @@ addEventListener('resize', () => {
     init()
 })
 
-function getDistance(x1,y1,x2,y2) {
-    const xDistance = x2 - x1;
-    const yDistance = y2 - y1;
-
-    return Math.sqrt(
-        Math.pow(xDistance , 2) + Math.pow(yDistance , 2)
-    )
-}
-
 // Implementation
-let objects
+window.game_objects = {}
 function init() {
-    objects = [
-        ...randomArray(4).map(() =>
+    window.game_objects = {
+        circles : randomArray(2).map((_,index) =>
             new Circle(
+                index,
                 randomIntFromRange(0,canvas.width) ,
                 randomIntFromRange(0,canvas.height),
-                80 ,
-                "black")
+                randomIntFromRange(10,30) ,
+                randomColor(colors))
         )
-    ]
+    }
 }
 function animate() {
     requestAnimationFrame(animate)
     context2D.clearRect(0, 0, canvas.width, canvas.height)
 
-    objects.forEach(object => {
+    Object.values(window.game_objects)[0].forEach(object => {
         object.update()
     })
 }

@@ -4,4 +4,4 @@ require('../scss/style.scss');
 
 /********** Paste your code here! ************/
 
-require("./canvas");
+require("./canvas-pacman");

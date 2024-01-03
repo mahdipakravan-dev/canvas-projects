@@ -44,10 +44,6 @@ const movements = {
     'd': { x: 5, y: 0 }
 };
 
-
-const colors = ['#2185C5', '#7ECEFD', '#FFF6E5', '#FF7F66']
-
-// Event Listeners
 addEventListener('mousemove', (event) => {
     mouse.x = event.clientX
     mouse.y = event.clientY
@@ -66,10 +62,6 @@ addEventListener("keydown" , ({key}) => {
     setting.key[key].pressed = true
     setting.key.last_key = key
 })
-addEventListener("keyup" , ({key}) => {
-
-})
-
 
 const map = [
     ["-","-","-","-","-","-","-","-","-","-"],
@@ -98,10 +90,10 @@ map.forEach((row,rowIndex) => {
 
 function pacmanCollidedToBoundary({player , boundary}) {
     return (
-        player.y - player.radius + player.velocity.y <= boundary.y + boundary.height &&
-        player.x + player.radius + player.velocity.x >= boundary.x &&
-        player.y + player.radius + player.velocity.y >= boundary.y &&
-        player.x - player.radius + player.velocity.x <= boundary.x + boundary.width
+        player.y - player.radius + (player.velocity.y) <= boundary.y + boundary.height &&
+        player.x + player.radius + (player.velocity.x) >= boundary.x &&
+        player.y + player.radius + (player.velocity.y) >= boundary.y &&
+        player.x - player.radius + (player.velocity.x) <= boundary.x + boundary.width
     )
 }
 
@@ -113,12 +105,12 @@ function init() {
 }
 function animate() {
     requestAnimationFrame(animate)
-    // setTimeout(() => animate() , 3000)
     context2D.clearRect(0, 0, canvas.width, canvas.height)
 
 
     Object.keys(movements).forEach(key => {
         if (setting.key[key].pressed && setting.key.last_key === key) {
+
             let collisionDetected = false;
             boundaries.forEach(boundary => {
                 if (
@@ -135,13 +127,13 @@ function animate() {
             });
 
             if (collisionDetected) {
-                if ((key === 'w' && Player.velocity.y < 0) || (key === 's' && Player.velocity.y > 0)) {
-                    Player.velocity.y = 0;
-                } else if ((key === 'a' && Player.velocity.x < 0) || (key === 'd' && Player.velocity.x > 0)) {
-                    Player.velocity.x = 0;
-                }
+                Player.velocity.y = 0;
+                Player.velocity.x = 0;
             } else {
-                Player.velocity = movements[key];
+                Player.velocity = {
+                    x : movements[key]["x"],
+                    y : movements[key]["y"]
+                }
             }
         }
     });

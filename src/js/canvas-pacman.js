@@ -57,7 +57,7 @@ addEventListener('resize', () => {
 })
 addEventListener("keydown" , ({key}) => {
     Object.keys(movement => {
-        setting.key[movement].pressed = false
+        if(setting.key[movement]) setting.key[movement].pressed = false
     })
     setting.key[key].pressed = true
     setting.key.last_key = key
@@ -99,10 +99,11 @@ function pacmanCollidedToBoundary({player , boundary}) {
 
 const Player = new Pacman(60,60,15,"yellow")
 let objects
-function init() {
-    objects = [
+(function init() {
+    return objects = [
     ]
-}
+})()
+
 function animate() {
     requestAnimationFrame(animate)
     context2D.clearRect(0, 0, canvas.width, canvas.height)
@@ -140,24 +141,12 @@ function animate() {
 
     boundaries.forEach(boundary => {
         boundary.draw()
-
     })
 
-    // if(setting.key.s.pressed && setting.key.last_key === "s") {
-    //     setting.velocity.y = PACMAN_VELOCITY
-    // }
-    // if(setting.key.a.pressed && setting.key.last_key === "a") {
-    //     setting.velocity.x = -PACMAN_VELOCITY
-    // }
-    // if(setting.key.d.pressed && setting.key.last_key === "d") {
-    //     setting.velocity.x = PACMAN_VELOCITY
-    // }
     Player.update()
 
     objects.forEach(object => {
         object.update()
     })
 }
-
-init()
 animate()

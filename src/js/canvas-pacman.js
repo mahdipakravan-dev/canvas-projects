@@ -1,10 +1,13 @@
 const Boundary = require("./objects/boundary")
 const Pacman = require("./objects/pacman")
+const PacmanEnemy = require("./objects/pacman-enemy")
+const {randomArray} = require("./utils");
 const PACMAN_VELOCITY = 2
 
 window.canvas = document.querySelector('canvas')
 window.context2D = canvas.getContext('2d')
 window.setting = {
+    game_over : false,
     gravity : 1,
     fraction : 0.88,
     key : {
@@ -81,7 +84,7 @@ map.forEach((row,rowIndex) => {
                     y : rowIndex * 40,
                     width : 40,
                     height : 40,
-                    color : "red"
+                    color : "#919191"
                 }))
             }
         }
@@ -97,21 +100,68 @@ function pacmanCollidedToBoundary({player , boundary}) {
     )
 }
 
+function enemyCollidedToBoundary({enemy , boundary}) {
+    return (
+        enemy.y - enemy.height <= boundary.y + boundary.height &&
+        enemy.x + enemy.width >= boundary.x &&
+        enemy.y + enemy.height >= boundary.y &&
+        enemy.x - enemy.width <= boundary.x + boundary.width
+    )
+}
+function enemyCollidedToPlayer({player , enemy}) {
+    return (
+        player.y - player.radius + (player.velocity.y) <= enemy.y + enemy.height &&
+        player.x + player.radius + (player.velocity.x) >= enemy.x &&
+        player.y + player.radius + (player.velocity.y) >= enemy.y &&
+        player.x - player.radius + (player.velocity.x) <= enemy.x + enemy.width
+    )
+}
+
 const Player = new Pacman(60,60,15,"yellow")
-let objects
+let enemies
 (function init() {
-    return objects = [
+    return enemies = [
+        new PacmanEnemy({
+            fill : "red",
+            height : 20,
+            width : 20,
+            innerText : "😡",
+            x : 330,
+            y : 130,
+        }),
     ]
 })()
 
 function animate() {
+    if(setting.game_over) {
+        alert("GameOver")
+        return;
+    }
     requestAnimationFrame(animate)
     context2D.clearRect(0, 0, canvas.width, canvas.height)
 
+    let isEnemyCollidedToPlayer = false;
+    enemies.forEach((enemy , index) => {
+        if (
+            enemyCollidedToPlayer({
+                player: {
+                    ...Player,
+                    // velocity: movements[key]
+                },
+                enemy
+            })
+        ) {
+            isEnemyCollidedToPlayer = true;
+        }
+    })
+
+    if(isEnemyCollidedToPlayer) {
+        setting.game_over = true
+        return
+    }
 
     Object.keys(movements).forEach(key => {
         if (setting.key[key].pressed && setting.key.last_key === key) {
-
             let collisionDetected = false;
             boundaries.forEach(boundary => {
                 if (
@@ -145,7 +195,7 @@ function animate() {
 
     Player.update()
 
-    objects.forEach(object => {
+    enemies.forEach(object => {
         object.update()
     })
 }

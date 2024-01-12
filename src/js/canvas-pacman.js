@@ -67,25 +67,76 @@ addEventListener("keydown" , ({key}) => {
 })
 
 const map = [
-    ["-","-","-","-","-","-","-","-","-","-"],
-    ["-","","","","","","","","","-"],
-    ["-","","-","-","","","-","-","","-"],
-    ["-","","","","","","","","","-"],
-    ["-","-","-","-","-","-","-","-","-","-"],
+    ["c_lt","-","-","-","-","-","-","-","-","c_rt"],
+    ["|","","","","","","","","","|"],
+    ["|","","b","","","","","b","","|"],
+    ["|","","","","","","","","","|"],
+    ["c_lb","-","-","-","-","-","-","-","-","c_rb"],
 ]
 const boundaries = []
-
+const createImage = (src) => {
+    const image = new Image();
+    image.src = src
+    return image
+}
 map.forEach((row,rowIndex) => {
     row.forEach((item,itemIndex) => {
+        const sharedProps = {
+            x : itemIndex * 40,
+            y : rowIndex * 40,
+            width : 40,
+            height : 40,
+            color : "#919191",
+        }
         switch (item) {
             case "-" : {
                 boundaries.push(new Boundary({
-                    x : itemIndex * 40,
-                    y : rowIndex * 40,
-                    width : 40,
-                    height : 40,
-                    color : "#919191"
+                    ...sharedProps,
+                    image : createImage("./images/pipeHorizontal.png")
                 }))
+                break
+            }
+            case "|" : {
+                boundaries.push(new Boundary({
+                    ...sharedProps,
+                    image : createImage("./images/pipeVertical.png")
+                }))
+                break
+            }
+            case "c_lt" : {
+                boundaries.push(new Boundary({
+                    ...sharedProps,
+                    image : createImage("./images/pipeCorner1.png")
+                }))
+                break
+            }
+            case "c_lb" : {
+                boundaries.push(new Boundary({
+                    ...sharedProps,
+                    image : createImage("./images/pipeCorner4.png")
+                }))
+                break
+            }
+            case "c_rb" : {
+                boundaries.push(new Boundary({
+                    ...sharedProps,
+                    image : createImage("./images/pipeCorner3.png")
+                }))
+                break
+            }
+            case "c_rt" : {
+                boundaries.push(new Boundary({
+                    ...sharedProps,
+                    image : createImage("./images/pipeCorner2.png")
+                }))
+                break
+            }
+            case "b" : {
+                boundaries.push(new Boundary({
+                    ...sharedProps,
+                    image : createImage("./images/block.png")
+                }))
+                break
             }
         }
     })

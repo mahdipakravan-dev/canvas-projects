@@ -2,69 +2,6 @@ const Tile = require("./objects/tile")
 const Pacman = require("./objects/pacman")
 const PACMAN_VELOCITY = 2
 
-window.canvas = document.querySelector('canvas')
-window.context2D = canvas.getContext('2d')
-window.setting = {
-    game_over : false,
-    game_win : false,
-    gravity : 1,
-    fraction : 0.88,
-    key : {
-        last_key : undefined,
-        w : {
-            pressed : false,
-        },
-        a : {
-            pressed : false,
-        },
-        d : {
-            pressed : false,
-        },
-        s : {
-            pressed : false,
-        }
-    },
-    velocity : {
-        collided : false,
-        x : 0,
-        y : 0
-    }
-}
-
-canvas.width = innerWidth - 10
-canvas.height = innerHeight - 10
-
-const mouse = {
-    x: innerWidth / 2,
-    y: innerHeight / 2
-}
-
-const movements = {
-    'w': { x: 0, y: -5 },
-    'a': { x: -5, y: 0 },
-    's': { x: 0, y: 5 },
-    'd': { x: 5, y: 0 }
-};
-
-addEventListener('mousemove', (event) => {
-    mouse.x = event.clientX
-    mouse.y = event.clientY
-})
-
-addEventListener('resize', () => {
-    canvas.width = innerWidth
-    canvas.height = innerHeight
-
-    init()
-})
-addEventListener("keydown" , ({key}) => {
-    Object.keys(movement => {
-        if(setting.key[movement]) setting.key[movement].pressed = false
-    })
-    setting.key[key].pressed = true
-    setting.key.last_key = key
-})
-
 /*
 * Performance Measure :
 *   WIN : +1000 gold
@@ -88,6 +25,29 @@ addEventListener("keydown" , ({key}) => {
 *   Release,
 *   Shoo
 * */
+
+
+window.canvas = document.querySelector('canvas')
+window.context2D = canvas.getContext('2d')
+window.setting = {
+    game_over : false,
+    game_win : false,
+    velocity : {
+        collided : false,
+        x : 0,
+        y : 0
+    }
+}
+
+canvas.width = innerWidth - 10
+canvas.height = innerHeight - 10
+
+addEventListener('resize', () => {
+    canvas.width = innerWidth
+    canvas.height = innerHeight
+
+    init()
+})
 
 const stateEnum = {
     blank : "",
@@ -318,6 +278,6 @@ function animate() {
 
     player_last_move = next_move
 
-    setTimeout(animate , 300)
+    setTimeout(animate , 1000)
 }
 animate()
